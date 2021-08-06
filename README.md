@@ -25,6 +25,8 @@
 - node.js (https://nodejs.org/en/)
 - mx-bansystem (https://github.com/MOXHAFOREVA/mx-bansystem)
 
+# If your esx version is 1.2 or lower set `oldesx = true`
+
 ### How To Install
 - install `https://nodejs.org/en/` and `https://github.com/MOXHAFOREVA/mx-bansystem`
 - server.cfg > `ensure mx-servermanbot` `mx-bansystem`
