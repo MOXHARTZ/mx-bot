@@ -1,4 +1,4 @@
-# Fivem Server Management Bot
+# Fivem Server Management Bot 
 
 # Features
 - Discord Whitelist
