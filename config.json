@@ -1,0 +1,17 @@
+{
+     "token": "",
+     "prefix": "!",
+     "admin_roleid": "",
+     "discord_whitelist": {
+          "active": true,
+          "role_id": "",
+          "server_id": ""
+     },
+     "oldesx": false,
+     "mx-multicharacter": false,
+     "identifier": "license",
+     "wipe_tables": [
+          {"table": "users", "owner": "identifier"},
+          {"table": "addon_account_data", "owner": "owner"}
+     ]
+}
