@@ -24,6 +24,7 @@
 ## Requirements
 - node.js (https://nodejs.org/en/)
 - mx-bansystem (https://github.com/MOXHAFOREVA/mx-bansystem)
+- git (https://git-scm.com/downloads)
 
 # If your esx version is 1.2 or lower set `oldesx = true`
 
