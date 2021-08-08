@@ -1,36 +1,8 @@
 Config = nil
-
-RegisterNetEvent('mx-serverman:GetConfig')
-AddEventHandler('mx-serverman:GetConfig', function (config)
+exports('GetConfig', function (config)
     Config = config
 end)
-
-function Identifier(player)
-    for _,v in ipairs(GetPlayerIdentifiers(player)) do
-        if Config.identifier == 'steam' then  
-             if string.match(v, 'steam') then
-                  return v
-             end
-        elseif Config.identifier == 'license' then
-             if string.match(v, 'license:') then
-                  return string.sub(v, 9)
-             end
-        end
-    end
-    return ''
-end
-
-function GetDiscord(id)
-    for _,v in ipairs(GetPlayerIdentifiers(id)) do
-        if string.match(v, 'discord:') then
-            return v
-        end
-    end
-    return false
-end
-
-RegisterNetEvent('mx-serverman:GetBannedPlayers')
-AddEventHandler('mx-serverman:GetBannedPlayers', function ()
+exports('GetBannedPlayers', function()
     local fetch = [[SELECT * FROM bannedplayers]]
     local result = MySQL.Sync.fetchAll(fetch)
     local embed = {
@@ -64,9 +36,7 @@ AddEventHandler('mx-serverman:GetBannedPlayers', function ()
         TriggerEvent('mx-serverman:SendEmbed', embed)
     end
 end)
-
-RegisterNetEvent('mx-serverman:GetBannedPlayer')
-AddEventHandler('mx-serverman:GetBannedPlayer', function (id)
+exports('GetBannedPlayer', function(id)
     if GetPlayerName(id) then
         local fetch = [[SELECT * FROM bannedplayers WHERE identifier = @id;]]
         local fetchData = {['@id'] = Identifier(id)}
@@ -141,9 +111,15 @@ AddEventHandler('mx-serverman:GetBannedPlayer', function (id)
         end
     end
 end)
-
-RegisterNetEvent('mx-serverman:Wipe')
-AddEventHandler('mx-serverman:Wipe', function (id)
+exports('GetDiscordFromId', function (id)
+    for _,v in ipairs(GetPlayerIdentifiers(id)) do
+        if string.match(v, 'discord:') then
+            return string.gsub(v, 'discord:', '')
+        end
+    end
+    return false
+end)
+exports('Wipe', function (id)
     if GetPlayerName(id) then
         local fetch = [[SELECT identifier FROM users WHERE identifier = @id]]
         local fetchData = {['@id'] = Identifier(id)}
@@ -177,19 +153,14 @@ AddEventHandler('mx-serverman:Wipe', function (id)
         end
     else
         local fetch = [[SELECT identifier FROM users WHERE identifier = @id;]]
+        local fetchData = {['@id'] = id}
         if Config['mx-multicharacter'] then
             fetch = [[SELECT citizenid FROM users WHERE citizenid = @id;]]
         end
-        local fetchData = {['@id'] = id}
-        
         local result = MySQL.Sync.fetchAll(fetch, fetchData)
         if result and result[1] then
             for _, v in ipairs(Config.wipe_tables) do
-                if not Config['mx-multicharacter'] then
-                    MySQL.Sync.execute("DELETE FROM `"..v.table.."` WHERE `"..v.owner.."` = '"..id.."'")
-                else    
-                    MySQL.Sync.execute("DELETE FROM `"..v.table.."` WHERE `"..v.owner.."` = '"..id.."'")
-                end 
+                MySQL.Sync.execute("DELETE FROM `"..v.table.."` WHERE `"..v.owner.."` = '"..id.."'")
             end
             local embed = {
                 description = id.." Wiped",
@@ -207,9 +178,7 @@ AddEventHandler('mx-serverman:Wipe', function (id)
         end
     end
 end)
-
-RegisterNetEvent('mx-serverman:GetInventory')
-AddEventHandler('mx-serverman:GetInventory', function (id)
+exports('GetInventory', function (id)
     if GetPlayerName(id) then
         local embed = {
             fields = {},
@@ -238,7 +207,7 @@ AddEventHandler('mx-serverman:GetInventory', function (id)
         end)
     else
         if Config['old_esx'].user_inventory then
-            local fetch = [[SELECT * FROM user_inventory WHERE identifier = @id AND count > 0;]]
+            local fetch = [[SELECT item, count FROM user_inventory WHERE identifier = @id AND count > 0;]]
             local fetchData = {['@id'] = id}
             local result = MySQL.Sync.fetchAll(fetch, fetchData)
             local embed = {
@@ -295,9 +264,7 @@ AddEventHandler('mx-serverman:GetInventory', function (id)
         end
     end
 end)
-
-RegisterNetEvent('mx-serverman:SetCoords')
-AddEventHandler('mx-serverman:SetCoords', function (id, x, y, z)
+exports('SetCoords', function (id, x, y, z)
     if GetPlayerName(id) then
         TriggerClientEvent('esx:teleport', id, {x = tonumber(x), y = tonumber(y), z = tonumber(z)})
         local embed = {
@@ -315,17 +282,15 @@ AddEventHandler('mx-serverman:SetCoords', function (id, x, y, z)
         TriggerEvent('mx-serverman:SendEmbed', embed)
     end
 end)
-
-RegisterNetEvent('mx-serverman:GetMoney')
-AddEventHandler('mx-serverman:GetMoney', function (id)
+exports('GetMoney', function (id)
     if GetPlayerName(id) then
         TriggerEvent('esx:getSharedObject', function(ESX)
             local xPlayer = ESX.GetPlayerFromId(id)
             local embed = {
                 fields = {
-                    {name = 'Bank', value = xPlayer.getAccount('bank').money},
-                    {name = 'Money', value = xPlayer.getAccount('money').money},
-                    {name = 'Black Money',  value =  xPlayer.getAccount('black_money').money}
+                    {name = 'Bank', value = xPlayer.getAccount('bank').money, inline = true},
+                    {name = 'Money', value = xPlayer.getAccount('money').money, inline = true},
+                    {name = 'Black Money', value = xPlayer.getAccount('black_money').money, inline = true}
                 },
                 color = "#0094ff", -- blue
                 author = 'SUCCESS'
@@ -408,19 +373,7 @@ AddEventHandler('mx-serverman:GetMoney', function (id)
         end
     end
 end)
-
-function GetJobProps(name, grade)
-    local fetch = [[SELECT label FROM job_grades WHERE job_name = @name AND grade = @grade;]]
-    local fetchData = {
-        ['@name'] = name,
-        ['@grade'] = grade
-    }
-    local result = MySQL.Sync.fetchAll(fetch, fetchData)
-    return result
-end
-
-RegisterNetEvent('mx-serverman:GetGeneralInformations')
-AddEventHandler('mx-serverman:GetGeneralInformations', function (id)
+exports('GetGeneralInformations', function (id)
     if GetPlayerName(id) then
         local fetch = [[SELECT * FROM users WHERE identifier = @id;]]
         local fetchData = {['@id'] = Identifier(id)}
@@ -432,7 +385,7 @@ AddEventHandler('mx-serverman:GetGeneralInformations', function (id)
         local ident = Config['mx-multicharacter'] and exports['mx-multicharacter']:GetCitizenId(id) or Identifier(id)
         if result and result[1] then
             local job = GetJobProps(result[1].job, result[1].job_grade)
-            local discord = GetDiscord(id) and string.gsub(GetDiscord(id), 'discord:', '') or 'Not Finded'
+            local discord = GetDiscord(id) or 'Not Finded'
             local embed = {
                 fields = {
                     {name = 'Identifier', value = ident or '...', inline = true},
@@ -491,9 +444,7 @@ AddEventHandler('mx-serverman:GetGeneralInformations', function (id)
         end
     end
 end)
-
-RegisterNetEvent('mx-serverman:AddPlayerMoney')
-AddEventHandler('mx-serverman:AddPlayerMoney', function (id, type, amount)
+exports('AddMoney', function (id, type, amount)
     if GetPlayerName(id) then
         TriggerEvent('esx:getSharedObject', function(ESX)
             local xPlayer = ESX.GetPlayerFromId(id)
@@ -584,9 +535,7 @@ AddEventHandler('mx-serverman:AddPlayerMoney', function (id, type, amount)
         end
     end 
 end)
-
-RegisterNetEvent('mx-serverman:SetJob')
-AddEventHandler('mx-serverman:SetJob', function (id, job, grade)
+exports('SetJob', function(id, job, grade)
     TriggerEvent('esx:getSharedObject', function(ESX)
         if ESX.DoesJobExist(job, grade) then
             if GetPlayerName(id) then
@@ -653,9 +602,7 @@ AddEventHandler('mx-serverman:SetJob', function (id, job, grade)
         end
     end)
 end)
-
-RegisterNetEvent('mx-serverman:RemovePlayerMoney')
-AddEventHandler('mx-serverman:RemovePlayerMoney', function (id, type, amount)
+exports('RemoveMoney', function (id, type, amount)
     if GetPlayerName(id) then
         TriggerEvent('esx:getSharedObject', function(ESX)
             local xPlayer = ESX.GetPlayerFromId(id)
@@ -684,7 +631,6 @@ AddEventHandler('mx-serverman:RemovePlayerMoney', function (id, type, amount)
             if result and result[1] then
                 for i = 1, #result do
                     if type == result[i].name then
-                        print(amount, result[i].money, result[i].money + amount, type)
                         local embed = {
                             color = "#0094ff", -- blue
                             title = '`'..id..'` taked `'..amount..'` \nOld Balance: `'..result[i].money..'` \nNew Balance: `'..(math.floor(result[i].money - amount))..'` \nType: `'..type..'`',
@@ -747,9 +693,7 @@ AddEventHandler('mx-serverman:RemovePlayerMoney', function (id, type, amount)
         end
     end 
 end)
-
-RegisterNetEvent('mx-serverman:GiveItem')
-AddEventHandler('mx-serverman:GiveItem', function (id, name, count)
+exports('GiveItem', function (id, name, count)
     count = tonumber(count)
     if GetPlayerName(id) then
         TriggerEvent('esx:getSharedObject', function(ESX)
@@ -815,9 +759,7 @@ AddEventHandler('mx-serverman:GiveItem', function (id, name, count)
         end
     end
 end)
-
-RegisterNetEvent('mx-serverman:GetPlayers')
-AddEventHandler('mx-serverman:GetPlayers', function ()
+exports('GetPlayers', function ()
     local embed = {
         color = "#0094ff", -- blue
         author = 'PLAYERS',
@@ -833,7 +775,7 @@ AddEventHandler('mx-serverman:GetPlayers', function ()
             }
             for i = 1, #players do
                 local xPlayer = ESX.GetPlayerFromId(players[i])
-                local discord = GetDiscord(players[i]) and string.gsub(GetDiscord(players[i]), 'discord:', '') or 'Not Finded'
+                local discord = GetDiscord(players[i]) or 'Not Finded'
                 embed.fields[1].value = embed.fields[1].value..GetPlayerName(players[i])..' ['..players[i]..']'
                 embed.fields[2].value = embed.fields[2].value..'<@'..discord..'>'
                 embed.fields[3].value = Config['mx-multicharacter'] and embed.fields[3].value..xPlayer.citizenid or embed.fields[3].value..xPlayer.identifier
@@ -842,9 +784,7 @@ AddEventHandler('mx-serverman:GetPlayers', function ()
         TriggerEvent('mx-serverman:SendEmbed', embed)
     end)
 end)
-
-RegisterNetEvent('mx-serverman:Revive')
-AddEventHandler('mx-serverman:Revive', function (id)
+exports('Revive', function (id)
     if GetPlayerName(id) then
         TriggerClientEvent('esx_ambulancejob:revive', id)
         local embed = {
@@ -861,9 +801,7 @@ AddEventHandler('mx-serverman:Revive', function (id)
         TriggerEvent('mx-serverman:SendEmbed', embed)
     end
 end)
-
-RegisterNetEvent('mx-serverman:ReviveAll')
-AddEventHandler('mx-serverman:ReviveAll', function ()
+exports('ReviveAll', function ()
     TriggerEvent('esx:getSharedObject', function(ESX)
         local players = ESX.GetPlayers()
         for i = 1, #players do
@@ -884,3 +822,34 @@ AddEventHandler('mx-serverman:ReviveAll', function ()
         end
     end)
 end)
+function Identifier(player)
+    for _,v in ipairs(GetPlayerIdentifiers(player)) do
+        if Config.identifier == 'steam' then  
+             if string.match(v, 'steam') then
+                  return v
+             end
+        elseif Config.identifier == 'license' then
+             if string.match(v, 'license:') then
+                  return string.sub(v, 9)
+             end
+        end
+    end
+    return ''
+end
+function GetDiscord(id)
+    for _,v in ipairs(GetPlayerIdentifiers(id)) do
+        if string.match(v, 'discord:') then
+            return string.gsub(v, 'discord:', '')
+        end
+    end
+    return false
+end
+function GetJobProps(name, grade)
+    local fetch = [[SELECT label FROM job_grades WHERE job_name = @name AND grade = @grade;]]
+    local fetchData = {
+        ['@name'] = name,
+        ['@grade'] = grade
+    }
+    local result = MySQL.Sync.fetchAll(fetch, fetchData)
+    return result
+end

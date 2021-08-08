@@ -1,12 +1,11 @@
 const Discord = require('discord.js');
 var client = new Discord.Client;
-global.config = require('./config.json');
-const Library = require("./utils/library");
+const config = require('./config.json');
 var CurrentChannel = false;
 var RefreshBot = false;
 
 RefreshWhitelist = () => {
-     print('^1 [MOXHA] ^4Refreshing BOT^0')
+     console.log('^1 [MOXHA] ^4Refreshing BOT^0')
      CurrentChannel && CurrentChannel.send(SendEmbed({
           description: 'Refreshing Bot',
           color : "#47ff00",
@@ -23,7 +22,7 @@ StartBot = () => {
      client.on('ready', () => {
           !RefreshBot && console.log('^1 [MOXHA] ^2Bot Is Ready^0')
           if (RefreshBot) {
-               print('^1 [MOXHA] ^6Refreshed Bot^0')
+               console.log('^1 [MOXHA] ^6Refreshed Bot^0')
                CurrentChannel && CurrentChannel.send(SendEmbed({
                     description: 'Refreshed Bot',
                     color : "#0094ff",
@@ -31,19 +30,19 @@ StartBot = () => {
                }))
                RefreshBot = false;               
           }
-          emit('mx-serverman:GetConfig', config)
+          exports['mx-servermanbot'].GetConfig(config);
           if (config.discord_whitelist.active) {
                !RefreshBot && console.log('^1 [MOXHA] ^3Discord Whitelist Active ^0')
                on('playerConnecting', (name, setCallback, deferrals) => {
                     var src = global.source;
                     deferrals.defer();
-                    var player = GetDiscordFromId(src);
+                    var player = exports['mx-servermanbot'].GetDiscordFromId(src)
                     deferrals.update('Checking Discord Whitelist Please Wait...')
                     
                     setTimeout(() => {
-                         if (player) {
+                         if (player[0]) {
                               const guild = client.guilds.get(config.discord_whitelist.server_id)
-                              guild.members.fetch(player)
+                              guild.members.fetch(player[0])
                               .then(result => {
                                    if (result.roles.find(search => search.id == config.discord_whitelist.role_id)) {
                                         deferrals.done();
@@ -95,8 +94,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'inventory') {
                          if (args[1]) {
-                              Library.GetInventory(args[1])
-                              return false;
+                              return exports['mx-servermanbot'].GetInventory(args[1]);
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -107,7 +105,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'setcoords') {
                          if (args[1] && args[2] && args[3] && args[4] && Number(args[2]) && Number(args[3]) && Number(args[4])) {
-                              Library.SetCoords(args[1], args[2], args[3], args[4])
+                              return exports['mx-servermanbot'].SetCoords(args[1], args[2], args[3], args[4]);
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -118,8 +116,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'accounts') {
                          if (args[1]) {
-                              Library.  GetMoney(args[1])
-                              return false;
+                              return exports['mx-servermanbot'].GetMoney(args[1]);
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -131,8 +128,7 @@ StartBot = () => {
                     }else if (args[0] == config.prefix + 'addmoney') {
                               if (args[1] && args[2] && args[3]) { 
                                    if (args[2] == 'money' || args[2] == 'bank' || args[2] == 'black_money') {
-                                        Library.AddMoney(args[1], args[2], (Number(args[3]) && args[3] || 0))
-                                        return false;
+                                        return exports['mx-servermanbot'].AddMoney(args[1], args[2], (Number(args[3]) && args[3] || 0));
                                    }else {
                                         embed
                                         .setColor('#ff0000')
@@ -158,8 +154,7 @@ StartBot = () => {
                          }else if (args[0] == config.prefix + 'giveitem') {
                               if (args[1] && args[2] && args[3]) { 
                                    if (Number(args[3]) != null) {
-                                        Library.GiveItem(args[1], args[2], Number(args[3]))
-                                        return false;
+                                        return exports['mx-servermanbot'].GiveItem(args[1], args[2], Number(args[3]));
                                    }else {
                                         embed
                                         .setColor('#ff0000')
@@ -179,8 +174,7 @@ StartBot = () => {
                          }else if (args[0] == config.prefix + 'setjob') {
                               if (args[1] && args[2] && args[3]) { 
                                    if (Number(args[3]) != null) {
-                                        Library.SetJob(args[1], args[2], Number(args[3]))
-                                        return false;
+                                        return exports['mx-servermanbot'].SetJob(args[1], args[2], Number(args[3]));
                                    }else {
                                         embed
                                         .setColor('#ff0000')
@@ -200,8 +194,7 @@ StartBot = () => {
                          }else if (args[0] == config.prefix + 'removemoney') {
                               if (args[1] && args[2] && args[3]) { 
                                    if (args[2] == 'money' || args[2] == 'bank' || args[2] == 'black_money') {
-                                        Library.RemoveMoney(args[1], args[2], (Number(args[3]) && args[3] || 0))
-                                        return false;
+                                        return exports['mx-servermanbot'].RemoveMoney(args[1], args[2], (Number(args[3]) && args[3] || 0));
                                    }else {
                                         embed
                                         .setColor('#ff0000')
@@ -226,8 +219,7 @@ StartBot = () => {
                               }
                     }else if (args[0] == config.prefix + 'checkban') {
                          if (args[1]) {
-                              Library.GetBannedPlayer(args[1]);
-                              return false;
+                              return exports['mx-servermanbot'].GetBannedPlayer(args[1])
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -238,8 +230,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'playerinfo') {
                          if (args[1]) {
-                              Library.GetGeneralInformations(args[1])
-                              return false;
+                              return exports['mx-servermanbot'].GetGeneralInformations(args[1]);
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -250,8 +241,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'wipe') {
                          if (args[1]) {
-                              Library.Wipe(args[1])
-                              return false;
+                              return exports['mx-servermanbot'].Wipe(args[1]);
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -273,15 +263,12 @@ StartBot = () => {
                               return false;
                          }
                     }else if (args[0] == config.prefix + 'reviveall') {
-                         Library.ReviveAll()
-                         return false;
+                         return exports['mx-servermanbot'].ReviveAll();
                     }else if (args[0] == config.prefix + 'refreshwhitelist') {
-                         RefreshWhitelist()
-                         return false;
+                         return RefreshWhitelist();
                     }else if (args[0] == config.prefix + 'revive') {
                          if (args[1]) {
-                              Library.Revive(args[1])
-                              return false;
+                              return exports['mx-servermanbot'].Revive(args[1]);
                          }else {
                               embed
                               .setColor('#ff0000')
@@ -314,11 +301,9 @@ StartBot = () => {
                          msg.channel.send(embed);
                          return false;
                     }else if (args[0] == config.prefix + 'bannedplayers') {
-                         Library.GetBannedPlayers();
-                         return false;
+                         return exports['mx-servermanbot'].GetBannedPlayers();
                     }else if (args[0] == config.prefix + 'players') {
-                         Library.GetOnlinePlayers();
-                         return false;
+                         return exports['mx-servermanbot'].GetPlayers();
                     }
                }else {
                     embed
@@ -332,16 +317,6 @@ StartBot = () => {
      })
      client.login(config.token)
 }
-
-GetDiscordFromId = (id) => {
-     if (!GetPlayerName(id)) {return false};
-     for (var i = 0; i <= GetNumPlayerIdentifiers(id); i++) {
-          if (GetPlayerIdentifier(id, i).indexOf('discord:') !== -1) {
-               return GetPlayerIdentifier(id, i).replace('discord:', '');
-          } 
-     }
-     return false
-} 
 
 RegisterNetEvent('mx-serverman:SendEmbed')
 on('mx-serverman:SendEmbed', embed => {
@@ -363,4 +338,4 @@ SendEmbed = (embed) => {
      return CreateEmbed
 }
 
-StartBot()
+StartBot();
