@@ -677,7 +677,7 @@ AddEventHandler('mx-serverman:RemovePlayerMoney', function (id, type, amount)
             end
         end)
     else    
-        if Config['oldesx'] then
+        if Config['old_esx'].user_accounts then
             local fetch = [[SELECT name, money FROM user_accounts WHERE identifier = @id]]
             local fetchData = {['@id'] = id}
             local result = MySQL.Sync.fetchAll(fetch, fetchData)
