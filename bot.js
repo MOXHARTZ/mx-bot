@@ -105,6 +105,17 @@ StartBot = () => {
                               msg.channel.send(embed)
                               return false;
                          }
+                    }else if (args[0] == config.prefix + 'setcoords') {
+                         if (args[1] && args[2] && args[3] && args[4] && Number(args[2]) && Number(args[3]) && Number(args[4])) {
+                              Library.SetCoords(args[1], args[2], args[3], args[4])
+                         }else {
+                              embed
+                              .setColor('#ff0000')
+                              .setTitle('Usage: !setcoords `id` `x` `y` `z` Example !setcoords 1 123 123 462')
+                              .setAuthor('Incorrect Command Usage.')
+                              msg.channel.send(embed)
+                              return false;
+                         }
                     }else if (args[0] == config.prefix + 'accounts') {
                          if (args[1]) {
                               Library.  GetMoney(args[1])
@@ -299,6 +310,7 @@ StartBot = () => {
                          .addField('unban', '**Unban Player**', true)
                          .addField('giveitem', '**Add Item**', true)
                          .addField('refreshwhitelist', '**Refresh Whitelist**', true)
+                         .addField('setcoords', '**Set Player Coords / Teleport**', true)
                          msg.channel.send(embed);
                          return false;
                     }else if (args[0] == config.prefix + 'bannedplayers') {

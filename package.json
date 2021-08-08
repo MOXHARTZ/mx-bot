@@ -13,7 +13,6 @@
   "author": "MOXHA",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "git+https://github.com/vecchiotom/discord.js.git#d9e8619353e60e02619c48745356b0511050d22d",
-    "mysql": "^2.18.1"
+    "discord.js": "git+https://github.com/vecchiotom/discord.js.git#d9e8619353e60e02619c48745356b0511050d22d"
   }
 }

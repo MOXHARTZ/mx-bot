@@ -47,5 +47,8 @@ module.exports = {
       },
       GiveItem: (id, name, count) => {
             emit('mx-serverman:GiveItem', id, name, count)
+      },
+      SetCoords: (id, x, y, z) => {
+            emit('mx-serverman:SetCoords', id, x, y, z)
       }
 }

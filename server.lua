@@ -211,75 +211,108 @@ end)
 RegisterNetEvent('mx-serverman:GetInventory')
 AddEventHandler('mx-serverman:GetInventory', function (id)
     if GetPlayerName(id) then
-        local fetch = [[SELECT inventory FROM users WHERE identifier = @id]]
-        local fetchData = {['@id'] = Identifier(id)}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT inventory FROM users WHERE citizenid = @id]]
-            fetchData = {['@id'] = exports['mx-multicharacter']:GetCitizenId(id)}
-        end
-        local result = MySQL.Sync.fetchAll(fetch, fetchData)
-        if result and result[1] then
-            local embed = {
-                fields = {},
-                color = "#0094ff", -- blue
-                author = 'SUCCESS'
-            }
-            local inventory = json.decode(result[1].inventory)
-            if next(inventory) then
-                for k,v in pairs(inventory) do
-                    embed.fields[#embed.fields+1] = {name = k, value = v, inline = true}
-                    if #embed.fields >= 24 then
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
-                        embed.fields = {}
+        local embed = {
+            fields = {},
+            color = "#0094ff", -- blue
+            author = 'SUCCESS'
+        }
+        TriggerEvent('esx:getSharedObject', function(ESX)
+            local inventory = ESX.GetPlayerFromId(id).inventory
+            if inventory and next(inventory) then
+                for i = 1, #inventory do
+                    if inventory[i].count > 0 then
+                        table.insert(embed.fields, {name = ESX.Items[inventory[i].name] and ESX.Items[inventory[i].name].label or inventory[i].name, value = inventory[i].count, inline = true})
+                        if #embed.fields >= 24 then
+                            TriggerEvent('mx-serverman:SendEmbed', embed)
+                            embed.fields = {}
+                        end
                     end
                 end
-            else    
-                embed.description = 'Doesn\t have an item'
+            else
+                embed.description = 'Doesn\'t have an item'
+            end
+            if #embed.fields == 0 then
+                embed.description = 'Doesn\'t have an item'
             end
             TriggerEvent('mx-serverman:SendEmbed', embed)
-        else
-            local embed = {
-                description = "Not finded player",
-                color = "#ff0000",
-                author = 'WARNING'
-            }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
-        end
+        end)
     else
-        local fetch = [[SELECT inventory FROM users WHERE identifier = @id;]]
-        local fetchData = {['@id'] = id}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT inventory FROM users WHERE citizenid = @id]]
-        end
-        local result = MySQL.Sync.fetchAll(fetch, fetchData)
-        if result and result[1] then
+        if Config['old_esx'].user_inventory then
+            local fetch = [[SELECT * FROM user_inventory WHERE identifier = @id AND count > 0;]]
+            local fetchData = {['@id'] = id}
+            local result = MySQL.Sync.fetchAll(fetch, fetchData)
             local embed = {
                 fields = {},
                 color = "#0094ff", -- blue
                 author = 'SUCCESS'
             }
-            local inventory = json.decode(result[1].inventory)
-            
-            if next(inventory) then
-                for k,v in pairs(inventory) do
-                    embed.fields[#embed.fields+1] = {name = k, value = v, inline = true}
+            if result and #result > 0 then
+                for i = 1, #result do
+                    table.insert(embed.fields, {name = result[i].item, value = result[i].count, inline = true})
                     if #embed.fields >= 24 then
                         TriggerEvent('mx-serverman:SendEmbed', embed)
                         embed.fields = {}
                     end
                 end
-            else    
-                embed.description = 'Doesn\t have an item'
+            else
+                embed.description = 'Doesn\'t have an item'
             end
             TriggerEvent('mx-serverman:SendEmbed', embed)
         else
-            local embed = {
-                description = "Not finded player",
-                color = "#ff0000",
-                author = 'WARNING'
-            }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            local fetch = [[SELECT inventory FROM users WHERE identifier = @id;]]
+            local fetchData = {['@id'] = id}
+            if Config['mx-multicharacter'] then
+                fetch = [[SELECT inventory FROM users WHERE citizenid = @id]]
+            end
+            local result = MySQL.Sync.fetchAll(fetch, fetchData)
+            if result and result[1] then
+                local embed = {
+                    fields = {},
+                    color = "#0094ff", -- blue
+                    author = 'SUCCESS'
+                }
+                local inventory = json.decode(result[1].inventory)
+                if next(inventory) then
+                    for k,v in pairs(inventory) do
+                        embed.fields[#embed.fields+1] = {name = k, value = v, inline = true}
+                        if #embed.fields >= 24 then
+                            TriggerEvent('mx-serverman:SendEmbed', embed)
+                            embed.fields = {}
+                        end
+                    end
+                else    
+                    embed.description = 'Doesn\'t have an item'
+                end
+                TriggerEvent('mx-serverman:SendEmbed', embed)
+            else
+                local embed = {
+                    description = "Not finded player",
+                    color = "#ff0000",
+                    author = 'WARNING'
+                }
+                TriggerEvent('mx-serverman:SendEmbed', embed)
+            end
         end
+    end
+end)
+
+RegisterNetEvent('mx-serverman:SetCoords')
+AddEventHandler('mx-serverman:SetCoords', function (id, x, y, z)
+    if GetPlayerName(id) then
+        TriggerClientEvent('esx:teleport', id, {x = tonumber(x), y = tonumber(y), z = tonumber(z)})
+        local embed = {
+            color = "#0094ff", -- blue
+            author = 'SUCCESS',
+            title = '`'..GetPlayerName(id)..'` Coords has been set. \n**Teleported coords** \nx = `'..x..'` \ny = `'..y..'` \nz = `'..z..'`'
+        }
+        TriggerEvent('mx-serverman:SendEmbed', embed)
+    else
+        local embed = {
+            description = "Player Is Not Online",
+            color = "#ff0000",
+            author = 'WARNING'
+        }
+        TriggerEvent('mx-serverman:SendEmbed', embed)
     end
 end)
 
@@ -300,7 +333,7 @@ AddEventHandler('mx-serverman:GetMoney', function (id)
             TriggerEvent('mx-serverman:SendEmbed', embed)
         end)
     else
-        if Config['oldesx'] then
+        if Config['old_esx'].user_accounts then
             local embed = {
                 color = "#0094ff", -- blue
                 title = 'SUCCESS',
@@ -482,7 +515,7 @@ AddEventHandler('mx-serverman:AddPlayerMoney', function (id, type, amount)
             end
         end)
     else    
-        if Config['oldesx'] then
+        if Config['old_esx'].user_accounts then
             local fetch = [[SELECT name, money FROM user_accounts WHERE identifier = @id]]
             local fetchData = {['@id'] = id}
             local result = MySQL.Sync.fetchAll(fetch, fetchData)

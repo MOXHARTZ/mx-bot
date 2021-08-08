@@ -7,7 +7,10 @@
           "role_id": "",
           "server_id": ""
      },
-     "oldesx": false,
+     "old_esx": {
+          "user_accounts": false,
+          "user_inventory": false
+     },
      "mx-multicharacter": false,
      "identifier": "license",
      "wipe_tables": [
