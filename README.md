@@ -26,8 +26,6 @@
 - mx-bansystem (https://github.com/MOXHAFOREVA/mx-bansystem)
 - git (https://git-scm.com/downloads)
 
-# If your esx version is 1.2 or lower set `oldesx = true`
-
 ### How To Install
 - install `https://nodejs.org/en/` and `https://github.com/MOXHAFOREVA/mx-bansystem`
 - server.cfg > `ensure mx-servermanbot` `mx-bansystem`
