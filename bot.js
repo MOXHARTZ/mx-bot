@@ -67,7 +67,7 @@ StartBot = () => {
                if (msg.member.roles.find((search) => search.id == config.admin_roleid)) {
                     if (args[0] == config.prefix + 'ban') {
                          if (args[1] && args[2] && args[3]) {               
-                              Library.Ban(msg.member.user, args[1], args, (Number(args[2]) && args[2] || 0))
+                              emit('mx-serverman:Ban', msg.member.user, args[1], args, (Number(args[2]) && args[2] || 0))
                               return false;
                          }else {
                               embed
@@ -82,7 +82,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'kick') {
                          if (args[1] && args[2]) {
-                              Library.Kick(msg.member.user, args[1], args)
+                              emit('mx-serverman:Kick', msg.member.user, args[1], args)
                               return false;
                          }else {
                               embed
@@ -252,7 +252,7 @@ StartBot = () => {
                          }
                     }else if (args[0] == config.prefix + 'unban') {
                          if (args[1]) {
-                              Library.Unban(args[1])
+                              emit('mx-serverman:Unban', args[1])
                               return false;
                          }else {
                               embed
