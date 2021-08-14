@@ -22,7 +22,7 @@
 
 # Images
 <a href="https://ibb.co/PcHQrvk"><img src="https://i.ibb.co/7nm4Sdh/image.png" alt="image" border="0"></a>
-<a href="https://im.ge/i/hCsfY"><img src="https://i.im.ge/2021/08/06/hCsfY.png" alt="hCsfY.png" border="0"></a>
+![image](https://user-images.githubusercontent.com/70913098/129451274-2f5b6881-ee90-459b-b471-70aa60f2e34d.png)
 ![image](https://user-images.githubusercontent.com/70913098/128532692-4a4902ab-760d-4a79-92ba-d6a38cb215ec.png)
 
 ## Requirements
