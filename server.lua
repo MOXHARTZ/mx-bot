@@ -123,18 +123,10 @@ exports('Wipe', function (id)
     if GetPlayerName(id) then
         local fetch = [[SELECT identifier FROM users WHERE identifier = @id]]
         local fetchData = {['@id'] = Identifier(id)}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT identifier FROM users WHERE citizenid = @id;]]
-            fetchData = {['@id'] = exports['mx-multicharacter']:GetCitizenId(id)}
-        end
         local result = MySQL.Sync.fetchAll(fetch, fetchData)
         if result and result[1] then
             for _, v in pairs(Config.wipe_tables) do
-                if not Config['mx-multicharacter'] then
-                    MySQL.Sync.execute("DELETE FROM `"..v.table.."` WHERE `"..v.owner.."` = '"..Identifier(id).."'")
-                else    
-                    MySQL.Sync.execute("DELETE FROM `"..v.table.."` WHERE `"..v.owner.."` = '"..exports['mx-multicharacter']:GetCitizenId(id).."'")
-                end 
+                MySQL.Sync.execute("DELETE FROM `"..v.table.."` WHERE `"..v.owner.."` = '"..Identifier(id).."'")
             end
             local embed = {
                 description = GetPlayerName(id).." Wiped",
@@ -154,9 +146,6 @@ exports('Wipe', function (id)
     else
         local fetch = [[SELECT identifier FROM users WHERE identifier = @id;]]
         local fetchData = {['@id'] = id}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT citizenid FROM users WHERE citizenid = @id;]]
-        end
         local result = MySQL.Sync.fetchAll(fetch, fetchData)
         if result and result[1] then
             for _, v in ipairs(Config.wipe_tables) do
@@ -230,9 +219,6 @@ exports('GetInventory', function (id)
         else
             local fetch = [[SELECT inventory FROM users WHERE identifier = @id;]]
             local fetchData = {['@id'] = id}
-            if Config['mx-multicharacter'] then
-                fetch = [[SELECT inventory FROM users WHERE citizenid = @id]]
-            end
             local result = MySQL.Sync.fetchAll(fetch, fetchData)
             if result and result[1] then
                 local embed = {
@@ -323,9 +309,6 @@ exports('GetMoney', function (id)
         else
             local fetch = [[SELECT accounts FROM users WHERE identifier = @id;]]
             local fetchData = {['@id'] = id}
-            if Config['mx-multicharacter'] then
-                fetch = [[SELECT accounts FROM users WHERE citizenid = @id;]]
-            end
             local result = MySQL.Sync.fetchAll(fetch, fetchData)
             if result and result[1] then
                 local embed = {
@@ -377,12 +360,8 @@ exports('GetGeneralInformations', function (id)
     if GetPlayerName(id) then
         local fetch = [[SELECT * FROM users WHERE identifier = @id;]]
         local fetchData = {['@id'] = Identifier(id)}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT firstname, lastname, dateofbirth, sex, job FROM users WHERE citizenid = @id;]]
-            fetchData = {['@id'] = exports['mx-multicharacter']:GetCitizenId(id)}
-        end
         local result = MySQL.Sync.fetchAll(fetch, fetchData)
-        local ident = Config['mx-multicharacter'] and exports['mx-multicharacter']:GetCitizenId(id) or Identifier(id)
+        local ident = Identifier(id)
         if result and result[1] then
             local job = GetJobProps(result[1].job, result[1].job_grade)
             local discord = GetDiscord(id) or 'Not Finded'
@@ -413,9 +392,6 @@ exports('GetGeneralInformations', function (id)
     else
         local fetch = [[SELECT * FROM users WHERE identifier = @id]]
         local fetchData = {['@id'] = id}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT * FROM users WHERE citizenid = @id;]]
-        end
         local result = MySQL.Sync.fetchAll(fetch, fetchData)
         if result and result[1] then
             local job = GetJobProps(result[1].job, result[1].job_grade)
@@ -497,20 +473,13 @@ exports('AddMoney', function (id, type, amount)
         else
             local fetch = [[SELECT accounts FROM users WHERE identifier = @id]]
             local fetchData = {['@id'] = id}
-            if Config['mx-multicharacter'] then
-                fetch = [[SELECT accounts FROM users WHERE citizenid = @id;]]
-            end
             local result = MySQL.Sync.fetchAll(fetch, fetchData)
             if result and result[1] then
                 if result[1].accounts and json.decode(result[1].accounts) then
                     local accounts = json.decode(result[1].accounts)
                     local oldMoney = accounts[type]
                     accounts[type] = math.floor(accounts[type] + tonumber(amount))
-                    if not Config['mx-multicharacter'] then
-                        MySQL.Sync.execute('UPDATE users SET accounts = @accounts WHERE identifier = @id', {['@accounts'] = json.encode(accounts), ['@id'] = id})
-                    else
-                        MySQL.Sync.execute('UPDATE users SET accounts = @accounts WHERE citizenid = @id', {['@accounts'] = json.encode(accounts), ['@id'] = id})
-                    end
+                    MySQL.Sync.execute('UPDATE users SET accounts = @accounts WHERE identifier = @id', {['@accounts'] = json.encode(accounts), ['@id'] = id})
                     local embed = {
                         color = "#0094ff", -- blue
                         title = '`'..GetPlayerName(id)..'` gived `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..accounts[type]..'` \nType: `'..type..'`',
@@ -560,24 +529,13 @@ exports('SetJob', function(id, job, grade)
             else    
                 local fetch = [[SELECT job, job_grade FROM users WHERE identifier = @id]]
                 local fetchData = {['@id'] = id}
-                if Config['mx-multicharacter'] then
-                    fetch = [[SELECT job, job_grade FROM users WHERE citizenid = @id;]]
-                end
                 local result = MySQL.Sync.fetchAll(fetch, fetchData)
                 if result and result[1] then
-                    if not Config['mx-multicharacter'] then
-                        MySQL.Sync.execute('UPDATE users SET job = @job, job_grade = @grade WHERE identifier = @id', {
-                            ['@job'] = job,
-                            ['@grade'] = grade,
-                            ['@id'] = id
-                        })
-                    else    
-                        MySQL.Sync.execute('UPDATE users SET job = @job, job_grade = @grade WHERE citizenid = @id', {
-                            ['@job'] = job,
-                            ['@grade'] = grade,
-                            ['@id'] = id
-                        })
-                    end
+                    MySQL.Sync.execute('UPDATE users SET job = @job, job_grade = @grade WHERE identifier = @id', {
+                        ['@job'] = job,
+                        ['@grade'] = grade,
+                        ['@id'] = id
+                    })
                     local embed = {
                         color = "#0094ff", -- blue
                         title = id..' setted job \nOld Job: `'..result[1].job..'`\nNew Job: `'..job..'` \nOld Grade: `'..result[1].job_grade..'` \nNew Grade: `'..grade..'`',
@@ -655,20 +613,13 @@ exports('RemoveMoney', function (id, type, amount)
         else
             local fetch = [[SELECT accounts FROM users WHERE identifier = @id]]
             local fetchData = {['@id'] = id}
-            if Config['mx-multicharacter'] then
-                fetch = [[SELECT accounts FROM users WHERE citizenid = @id;]]
-            end
             local result = MySQL.Sync.fetchAll(fetch, fetchData)
             if result and result[1] then
                 if result[1].accounts and json.decode(result[1].accounts) then
                     local accounts = json.decode(result[1].accounts)
                     local oldMoney = accounts[type]
                     accounts[type] = math.floor(accounts[type] - tonumber(amount))
-                    if not Config['mx-multicharacter'] then
-                        MySQL.Sync.execute('UPDATE users SET accounts = @accounts WHERE identifier = @id', {['@accounts'] = json.encode(accounts), ['@id'] = id})
-                    else
-                        MySQL.Sync.execute('UPDATE users SET accounts = @accounts WHERE citizenid = @id', {['@accounts'] = json.encode(accounts), ['@id'] = id})
-                    end
+                    MySQL.Sync.execute('UPDATE users SET accounts = @accounts WHERE identifier = @id', {['@accounts'] = json.encode(accounts), ['@id'] = id})
                     local embed = {
                         color = "#0094ff", -- blue
                         title = '`'..id..'` taked `'..tonumber(amount)..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..accounts[type]..'` \nType: `'..type..'`',
@@ -707,42 +658,25 @@ exports('GiveItem', function (id, name, count)
     else
         local fetch = [[SELECT inventory FROM users WHERE identifier = @id]]
         local fetchData = {['@id'] = id}
-        if Config['mx-multicharacter'] then
-            fetch = [[SELECT inventory FROM users WHERE citizenid = @id]]
-        end
         local result = MySQL.Sync.fetchAll(fetch, fetchData)
         if result and result[1] then
             if result[1].inventory then
                 local inventory = json.decode(result[1].inventory)
                 inventory[name] = inventory[name] >= 0 and count + inventory[name]
-                if not Config['mx-multicharacter'] then
-                    MySQL.Sync.execute('UPDATE users SET inventory = @inv WHERE identifier = @id',  {
-                        ['@id'] = id,
-                        ['@inv'] = json.encode(inventory)
-                    })
-                else
-                    MySQL.Sync.execute('UPDATE users SET inventory = @inv WHERE citizenid = @id', {
-                        ['@id'] = id,
-                        ['@inv'] = json.encode(inventory)
-                    })
-                end
+                MySQL.Sync.execute('UPDATE users SET inventory = @inv WHERE identifier = @id',  {
+                    ['@id'] = id,
+                    ['@inv'] = json.encode(inventory)
+                })
                 local embed = {
                     color = "#0094ff", -- blue
                     title = '`'..id..'` gived item. \nItem name:`'..name..'` \nCount: `'..count..'`',
                 }
                 TriggerEvent('mx-serverman:SendEmbed', embed)
             else
-                if not Config['mx-multicharacter'] then
-                    MySQL.Sync.execute('UPDATE users SET inventory = @inv WHERE identifier = @id',  {
-                        ['@id'] = id,
-                        ['@inv'] = json.encode({name = count})
-                    })
-                else
-                    MySQL.Sync.execute('UPDATE users SET inventory = @inv WHERE citizenid = @id', {
-                        ['@id'] = id,
-                        ['@inv'] = json.encode({name = count})
-                    })
-                end
+                MySQL.Sync.execute('UPDATE users SET inventory = @inv WHERE identifier = @id',  {
+                    ['@id'] = id,
+                    ['@inv'] = json.encode({name = count})
+                })
                 local embed = {
                     color = "#0094ff", -- blue
                     title = '`'..id..'` gived item. \nItem name:`'..name..'` \nCount: `'..count..'`',
@@ -778,7 +712,7 @@ exports('GetPlayers', function ()
                 local discord = GetDiscord(players[i]) or 'Not Finded'
                 embed.fields[1].value = embed.fields[1].value..GetPlayerName(players[i])..' ['..players[i]..']'
                 embed.fields[2].value = embed.fields[2].value..'<@'..discord..'>'
-                embed.fields[3].value = Config['mx-multicharacter'] and embed.fields[3].value..xPlayer.citizenid or embed.fields[3].value..xPlayer.identifier
+                embed.fields[3].value = embed.fields[3].value..xPlayer.identifier
             end
         end
         TriggerEvent('mx-serverman:SendEmbed', embed)
@@ -800,6 +734,72 @@ exports('Revive', function (id)
         }
         TriggerEvent('mx-serverman:SendEmbed', embed)
     end
+end)
+exports('start', function(name)
+    local find = false
+    for i = 1, GetNumResources() do
+        local resource_id = i - 1
+		local resource_name = GetResourceByFindIndex(resource_id)
+        if name == resource_name then
+            find = true
+            break
+        end
+    end
+    if find then
+        local embed = {
+            color = "#0094ff", -- blue
+            title = name..' Started.',
+        }
+        ExecuteCommand('ensure '..name)
+        TriggerEvent('mx-serverman:SendEmbed', embed)
+    else
+        local embed = {
+            color = "#0094ff", -- blue
+            title = 'Script not found!',
+        }
+        TriggerEvent('mx-serverman:SendEmbed', embed)
+    end
+end)
+exports('stop', function(name)
+    local find = false
+    for i = 1, GetNumResources() do
+        local resource_id = i - 1
+		local resource_name = GetResourceByFindIndex(resource_id)
+        if name == resource_name then
+            find = true
+            break
+        end
+    end
+    if find then
+        if GetResourceState(name) ~= 'stopped' then
+            local embed = {
+                color = "#0094ff", -- blue
+                title = name..' Stopped.',
+            }
+            ExecuteCommand('stop '..name)
+            TriggerEvent('mx-serverman:SendEmbed', embed)
+        else
+            local embed = {
+                color = "#0094ff", -- blue
+                title = 'The script is already closed!',
+            }
+            TriggerEvent('mx-serverman:SendEmbed', embed)
+        end
+    else
+        local embed = {
+            color = "#0094ff", -- blue
+            title = 'Script not found!',
+        }
+        TriggerEvent('mx-serverman:SendEmbed', embed)
+    end
+end)
+exports('refresh', function ()
+    local embed = {
+        color = "#0094ff", -- blue
+        title = 'Scripts have been refreshed.',
+    }
+    ExecuteCommand('refresh')
+    TriggerEvent('mx-serverman:SendEmbed', embed)
 end)
 exports('ReviveAll', function ()
     TriggerEvent('esx:getSharedObject', function(ESX)

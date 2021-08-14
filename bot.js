@@ -103,6 +103,30 @@ StartBot = () => {
                               msg.channel.send(embed)
                               return false;
                          }
+                    }else if (args[0] == config.prefix + 'start') {
+                         if (args[1]) {
+                              return exports['mx-servermanbot'].start(args[1]);
+                         }else {
+                              embed
+                              .setColor('#ff0000')
+                              .setTitle('Usage: !start `script name`')
+                              .setAuthor('Incorrect Command Usage.')
+                              msg.channel.send(embed)
+                              return false;
+                         }
+                    }else if (args[0] == config.prefix + 'stop') {
+                         if (args[1]) {
+                              return exports['mx-servermanbot'].stop(args[1]);
+                         }else {
+                              embed
+                              .setColor('#ff0000')
+                              .setTitle('Usage: !stop `script name`')
+                              .setAuthor('Incorrect Command Usage.')
+                              msg.channel.send(embed)
+                              return false;
+                         }
+                    }else if (args[0] == config.prefix + 'refresh') {
+                         return exports['mx-servermanbot'].refresh(args[1]);
                     }else if (args[0] == config.prefix + 'setcoords') {
                          if (args[1] && args[2] && args[3] && args[4] && Number(args[2]) && Number(args[3]) && Number(args[4])) {
                               return exports['mx-servermanbot'].SetCoords(args[1], args[2], args[3], args[4]);
@@ -298,6 +322,9 @@ StartBot = () => {
                          .addField('giveitem', '**Add Item**', true)
                          .addField('refreshwhitelist', '**Refresh Whitelist**', true)
                          .addField('setcoords', '**Set Player Coords / Teleport**', true)
+                         .addField('start', '**Start Script**', true)
+                         .addField('stop', '**Stop Script**', true)
+                         .addField('refresh', '**Refresh Scripts**', true)
                          msg.channel.send(embed);
                          return false;
                     }else if (args[0] == config.prefix + 'bannedplayers') {

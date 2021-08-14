@@ -15,6 +15,10 @@
 - Can give job
 - Can give item
 - Can show active players
+- Can setcoords for player
+- Can start script
+- Can stop script
+- Can refresh scripts
 
 # Images
 <a href="https://ibb.co/PcHQrvk"><img src="https://i.ibb.co/7nm4Sdh/image.png" alt="image" border="0"></a>
@@ -31,6 +35,14 @@
 - server.cfg > `ensure mx-servermanbot` `mx-bansystem`
 - Shift + right click on the `mx-servermanbot` folder and click `Open PowerShell window here`
 - write `npm i`
+- For start, refresh, stop commands add ur server.cfg >
+```
+# MX-SERVERMAN
+add_ace resource.mx-servermanbot command.start allow
+add_ace resource.mx-servermanbot command.ensure allow
+add_ace resource.mx-servermanbot command.stop allow
+add_ace resource.mx-servermanbot command.refresh allow
+```
 
 ## Config.json
 - Discord Application: https://discord.com/developers/applications/
