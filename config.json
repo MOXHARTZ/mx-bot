@@ -7,13 +7,14 @@
           "role_id": "",
           "server_id": ""
      },
+     "useQB": true,
      "old_esx": {
           "user_accounts": false,
           "user_inventory": false
      },
      "identifier": "license",
-     "wipe_tables": [
-          {"table": "users", "owner": "identifier"},
-          {"table": "addon_account_data", "owner": "owner"}
-     ]
+     "wipe_tables": [{
+          "table": "players",
+          "owner": "citizenid"
+     }]
 }
