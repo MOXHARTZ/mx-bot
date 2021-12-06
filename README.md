@@ -19,10 +19,12 @@
 - Can start script
 - Can stop script
 - Can refresh scripts
-
+- Can give a vehicle
+- All players can be given vehicles
+- Can give a weapon
 # Images
 <a href="https://ibb.co/PcHQrvk"><img src="https://i.ibb.co/7nm4Sdh/image.png" alt="image" border="0"></a>
-![image](https://user-images.githubusercontent.com/70913098/129451274-2f5b6881-ee90-459b-b471-70aa60f2e34d.png)
+![image](https://user-images.githubusercontent.com/70913098/144917663-b27d9827-84e1-4583-901e-fe6cfe97595c.png)
 ![image](https://user-images.githubusercontent.com/70913098/128532692-4a4902ab-760d-4a79-92ba-d6a38cb215ec.png)
 
 ## Requirements
