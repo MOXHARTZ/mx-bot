@@ -3,7 +3,7 @@
      "prefix": "!",
      "admin_roleid": "",
      "discord_whitelist": {
-          "active": true,
+          "active": false,
           "role_id": "",
           "server_id": ""
      },
@@ -13,8 +13,9 @@
           "user_inventory": false
      },
      "identifier": "license",
-     "wipe_tables": [{
-          "table": "players",
-          "owner": "citizenid"
-     }]
+     "wipe_tables": [
+          {"table": "users", "owner": "identifier"},
+          {"table": "addon_account_data", "owner": "owner"}
+     ],
+     "discord_link": "https://discord.gg/davU2SY"
 }

@@ -28,18 +28,12 @@
 ![image](https://user-images.githubusercontent.com/70913098/128532692-4a4902ab-760d-4a79-92ba-d6a38cb215ec.png)
 
 ## Requirements
-- node.js (https://nodejs.org/en/)
 - mx-bansystem (https://github.com/MOXHAFOREVA/mx-bansystem)
-- git (https://git-scm.com/downloads)
 
 ### How To Install
-- install `https://nodejs.org/en/` and `https://github.com/MOXHAFOREVA/mx-bansystem`
-- server.cfg > `ensure mx-servermanbot` `mx-bansystem`
-- Shift + right click on the `mx-servermanbot` folder and click `Open PowerShell window here`
-- write `npm i`
 - For start, refresh, stop commands add ur server.cfg >
 ```
-# MX-SERVERMAN
+# Server Management Bot
 add_ace resource.mx-servermanbot command.start allow
 add_ace resource.mx-servermanbot command.ensure allow
 add_ace resource.mx-servermanbot command.stop allow
