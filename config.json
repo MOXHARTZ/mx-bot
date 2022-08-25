@@ -7,7 +7,7 @@
           "role_id": "",
           "server_id": ""
      },
-     "useQB": true,
+     "useQB": false,
      "old_esx": {
           "user_accounts": false,
           "user_inventory": false

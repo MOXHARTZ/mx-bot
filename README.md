@@ -34,10 +34,10 @@
 - For start, refresh, stop commands add ur server.cfg >
 ```
 # Server Management Bot
-add_ace resource.mx-servermanbot command.start allow
-add_ace resource.mx-servermanbot command.ensure allow
-add_ace resource.mx-servermanbot command.stop allow
-add_ace resource.mx-servermanbot command.refresh allow
+add_ace resource.mx-bot command.start allow
+add_ace resource.mx-bot command.ensure allow
+add_ace resource.mx-bot command.stop allow
+add_ace resource.mx-bot command.refresh allow
 ```
 
 ## Config.json
@@ -70,4 +70,3 @@ add_ace resource.mx-servermanbot command.refresh allow
 And invite your bot !
 
 # How To Install [Video]: https://www.youtube.com/watch?v=zuse0Etmoqc
-

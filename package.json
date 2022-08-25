@@ -1,6 +1,6 @@
 {
-  "name": "fivemanagementbot",
-  "version": "1.5",
+  "name": "mx-bot",
+  "version": "2.50",
   "description": "",
   "main": "bot.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "\u0016https://github.com/MOXHAFOREVA/mx-servermanbot"
+    "url": "https://github.com/MOXHAFOREVA/mx-bot"
   },
   "author": "MOXHA",
   "license": "ISC",

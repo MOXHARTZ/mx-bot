@@ -22,18 +22,18 @@ exports('GetBannedPlayers', function()
             table.insert(embed.fields, {name = 'Admin', value = admin, inline = true})
             table.insert(embed.fields, {name = 'Reason', value = result[i].reason or '...', inline = true})
             if #embed.fields >= 24 then
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
                 embed.fields = {}
             end
         end
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     else
         local embed = {
             description = "Not banned players found",
             color = "#ff0000",
             author = 'WARNING'
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     end
 end)
 exports('GetBannedPlayer', function(id)
@@ -65,14 +65,14 @@ exports('GetBannedPlayer', function(id)
                 color = "#0094ff", -- blue
                 author = result[1].name or 'Name Is NULL'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local embed = {
                 description = "Not finded player",
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         local fetch = [[SELECT * FROM bannedplayers WHERE identifier = @id;]]
@@ -101,14 +101,14 @@ exports('GetBannedPlayer', function(id)
                 color = "#0094ff", -- blue
                 author = result[1].name or 'Name Is NULL'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local embed = {
                 description = "Player is not banned.",
                 color = "#33ff00",
                 author = 'INFORM'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     end
 end)
@@ -139,7 +139,7 @@ exports('Wipe', function (id)
                     color = "#33ff00",
                     author = 'SUCCESS'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
                 DropPlayer(id, 'Your character has been deleted.') 
             else
                 local embed = {
@@ -147,7 +147,7 @@ exports('Wipe', function (id)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         else
             local fetch = [[SELECT citizenid FROM players WHERE citizenid = ?]]
@@ -162,14 +162,14 @@ exports('Wipe', function (id)
                     color = "#33ff00",
                     author = 'SUCCESS'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else
                 local embed = {
                     description = "Not finded player",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end
     else
@@ -186,7 +186,7 @@ exports('Wipe', function (id)
                     color = "#33ff00",
                     author = 'SUCCESS'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
                 DropPlayer(id, 'Your character has been deleted.') 
             else
                 local embed = {
@@ -194,7 +194,7 @@ exports('Wipe', function (id)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         else
             local fetch = [[SELECT identifier FROM users WHERE identifier = @id;]]
@@ -209,14 +209,14 @@ exports('Wipe', function (id)
                     color = "#33ff00",
                     author = 'SUCCESS'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else
                 local embed = {
                     description = "Not finded player",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end
     end
@@ -237,7 +237,7 @@ exports('GetInventory', function (id)
                 for _,v in ipairs(inventory) do
                     table.insert(embed.fields, {name = v.label, value = v.amount, inline = true})
                     if #embed.fields >= 24 then
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                         embed.fields = {}
                     end
                 end
@@ -247,7 +247,7 @@ exports('GetInventory', function (id)
             if #embed.fields == 0 then
                 embed.description = 'Doesn\'t have an item'
             end
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local fetch = [[SELECT inventory FROM players WHERE citizenid = ?]]
             local fetchData = {id}
@@ -263,7 +263,7 @@ exports('GetInventory', function (id)
                     for i = 1, #items do
                         table.insert(embed.fields, {name = items[i].name, value = items[i].amount, inline = true})
                         if #embed.fields >= 24 then
-                            TriggerEvent('mx-serverman:SendEmbed', embed)
+                            TriggerEvent('mx-bot:SendEmbed', embed)
                             embed.fields = {}
                         end
                     end
@@ -271,7 +271,7 @@ exports('GetInventory', function (id)
             else
                 embed.description = 'Doesn\'t have an item'
             end
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         if GetPlayerName(id) then
@@ -288,7 +288,7 @@ exports('GetInventory', function (id)
                         if inventory[i].count > 0 then
                             table.insert(embed.fields, {name = ESX.Items[inventory[i].name] and ESX.Items[inventory[i].name].label or inventory[i].name, value = inventory[i].count, inline = true})
                             if #embed.fields >= 24 then
-                                TriggerEvent('mx-serverman:SendEmbed', embed)
+                                TriggerEvent('mx-bot:SendEmbed', embed)
                                 embed.fields = {}
                             end
                         end
@@ -299,7 +299,7 @@ exports('GetInventory', function (id)
                 if #embed.fields == 0 then
                     embed.description = 'Doesn\'t have an item'
                 end
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end)
         else
             if Config['old_esx'].user_inventory then
@@ -315,14 +315,14 @@ exports('GetInventory', function (id)
                     for i = 1, #result do
                         table.insert(embed.fields, {name = result[i].item, value = result[i].count, inline = true})
                         if #embed.fields >= 24 then
-                            TriggerEvent('mx-serverman:SendEmbed', embed)
+                            TriggerEvent('mx-bot:SendEmbed', embed)
                             embed.fields = {}
                         end
                     end
                 else
                     embed.description = 'Doesn\'t have an item'
                 end
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else
                 local fetch = [[SELECT inventory FROM users WHERE identifier = @id;]]
                 local fetchData = {['@id'] = id}
@@ -338,21 +338,21 @@ exports('GetInventory', function (id)
                         for k,v in pairs(inventory) do
                             embed.fields[#embed.fields+1] = {name = k, value = v, inline = true}
                             if #embed.fields >= 24 then
-                                TriggerEvent('mx-serverman:SendEmbed', embed)
+                                TriggerEvent('mx-bot:SendEmbed', embed)
                                 embed.fields = {}
                             end
                         end
                     else    
                         embed.description = 'Doesn\'t have an item'
                     end
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else
                     local embed = {
                         description = "Not finded player",
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             end
         end
@@ -371,14 +371,14 @@ exports('SetCoords', function (id, x, y, z)
             author = 'SUCCESS',
             title = '`'..GetPlayerName(id)..'` Coords has been set. \n**Teleported coords** \nx = `'..x..'` \ny = `'..y..'` \nz = `'..z..'`'
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     else
         local embed = {
             description = "Player Is Not Online",
             color = "#ff0000",
             author = 'WARNING'
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     end
 end)
 exports('GetMoney', function (id)
@@ -396,7 +396,7 @@ exports('GetMoney', function (id)
                 color = "#0094ff", -- blue
                 author = 'SUCCESS'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local fetch = [[SELECT money FROM players WHERE citizenid = ?]]
             local fetchData = {id}
@@ -427,14 +427,14 @@ exports('GetMoney', function (id)
                             value = accounts.cash
                         })
                     end
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else
                     local embed = {
                         description = "[DATABASE] Not finded accounts",
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local embed = {
@@ -442,7 +442,7 @@ exports('GetMoney', function (id)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end
     else
@@ -459,7 +459,7 @@ exports('GetMoney', function (id)
                     color = "#0094ff", -- blue
                     author = 'SUCCESS'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end)
         else
             if Config['old_esx'].user_accounts then
@@ -475,14 +475,14 @@ exports('GetMoney', function (id)
                     for i = 1, #result do
                         table.insert(embed.fields, {name = result[i].name, value = result[i].money})
                     end
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else
                     local embed = {
                         description = "Not finded player accounts",
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local fetch = [[SELECT accounts FROM users WHERE identifier = @id;]]
@@ -514,14 +514,14 @@ exports('GetMoney', function (id)
                                 value = accounts.money
                             })
                         end
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     else
                         local embed = {
                             description = "[DATABASE] Not finded accounts",
                             color = "#ff0000",
                             author = 'WARNING'
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     end
                 else
                     local embed = {
@@ -529,7 +529,7 @@ exports('GetMoney', function (id)
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             end
         end
@@ -569,14 +569,14 @@ exports('GetGeneralInformations', function (id)
                 color = "#0094ff", -- blue
                 author = 'SUCCESS'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local embed = {
                 description = "Not finded player",
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         if GetPlayerName(id) then
@@ -607,14 +607,14 @@ exports('GetGeneralInformations', function (id)
                 color = "#0094ff", -- blue
                 author = 'SUCCESS'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local embed = {
                 description = "Not finded player",
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     end
 end)
@@ -633,14 +633,14 @@ exports('AddMoney', function (id, type, amount)
                     color = "#0094ff", -- blue
                     title = '`'..GetPlayerName(id)..'` gived `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..xPlayer.PlayerData.money[type]..'` \nType: `'..type..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else   
                 local embed = {
                     description = "[ESX] Not Finded Player",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         else    
             local fetch = [[SELECT money FROM players WHERE citizenid = ?]]
@@ -656,14 +656,14 @@ exports('AddMoney', function (id, type, amount)
                         color = "#0094ff", -- blue
                         title = '`'..id..'` gived `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..accounts[type]..'` \nType: `'..type..'`',
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else
                     local embed = {
                         description = "[DATABASE] Not finded accounts",
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local embed = {
@@ -671,7 +671,7 @@ exports('AddMoney', function (id, type, amount)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end 
     else
@@ -685,14 +685,14 @@ exports('AddMoney', function (id, type, amount)
                         color = "#0094ff", -- blue
                         title = '`'..GetPlayerName(id)..'` gived `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..xPlayer.getAccount(type).money..'` \nType: `'..type..'`',
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else   
                    local embed = {
                        description = "[ESX] Not Finded Player",
                        color = "#ff0000",
                        author = 'WARNING'
                    }
-                   TriggerEvent('mx-serverman:SendEmbed', embed)
+                   TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             end)
         else    
@@ -707,7 +707,7 @@ exports('AddMoney', function (id, type, amount)
                                 color = "#0094ff", -- blue
                                 title = '`'..id..'` gived `'..amount..'` \nOld Balance: `'..result[i].money..'` \nNew Balance: `'..(math.floor(result[i].money + amount))..'` \nType: `'..type..'`',
                             }
-                            TriggerEvent('mx-serverman:SendEmbed', embed)
+                            TriggerEvent('mx-bot:SendEmbed', embed)
                             Execute('UPDATE user_accounts SET money = @money WHERE identifier = @id AND name = @name', {
                                 ['@money'] = result[i].money + math.floor(tonumber(amount)),
                                 ['@id'] = id,
@@ -722,7 +722,7 @@ exports('AddMoney', function (id, type, amount)
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local fetch = [[SELECT accounts FROM users WHERE identifier = @id]]
@@ -738,14 +738,14 @@ exports('AddMoney', function (id, type, amount)
                             color = "#0094ff", -- blue
                             title = '`'..GetPlayerName(id)..'` gived `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..accounts[type]..'` \nType: `'..type..'`',
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     else
                         local embed = {
                             description = "[DATABASE] Not finded accounts",
                             color = "#ff0000",
                             author = 'WARNING'
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     end
                 else
                     local embed = {
@@ -753,7 +753,7 @@ exports('AddMoney', function (id, type, amount)
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             end
         end 
@@ -773,14 +773,14 @@ exports('SetJob', function(id, job, grade)
                     color = "#0094ff", -- blue
                     title = GetPlayerName(id)..' setted job \nOld Job: `'..beforeJob..'`\nNew Job: `'..job..'` \nOld Grade: `'..beforeJobGrade..'` \nNew Grade: `'..grade..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else   
                 local embed = {
                     description = "QBCORE Not Finded Player",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         else    
             local embed = {
@@ -788,7 +788,7 @@ exports('SetJob', function(id, job, grade)
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end 
     else
         TriggerEvent('esx:getSharedObject', function(ESX)
@@ -803,14 +803,14 @@ exports('SetJob', function(id, job, grade)
                             color = "#0094ff", -- blue
                             title = GetPlayerName(id)..' setted job \nOld Job: `'..beforeJob..'`\nNew Job: `'..job..'` \nOld Grade: `'..beforeJobGrade..'` \nNew Grade: `'..grade..'`',
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     else   
                        local embed = {
                            description = "[ESX] Not Finded Player",
                            color = "#ff0000",
                            author = 'WARNING'
                        }
-                       TriggerEvent('mx-serverman:SendEmbed', embed)
+                       TriggerEvent('mx-bot:SendEmbed', embed)
                     end
                 else    
                     local fetch = [[SELECT job, job_grade FROM users WHERE identifier = @id]]
@@ -826,14 +826,14 @@ exports('SetJob', function(id, job, grade)
                             color = "#0094ff", -- blue
                             title = id..' setted job \nOld Job: `'..result[1].job..'`\nNew Job: `'..job..'` \nOld Grade: `'..result[1].job_grade..'` \nNew Grade: `'..grade..'`',
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     else
                         local embed = {
                             description = "Not finded player",
                             color = "#ff0000",
                             author = 'WARNING'
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     end
                 end 
             else    
@@ -842,7 +842,7 @@ exports('SetJob', function(id, job, grade)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end)
     end
@@ -862,14 +862,14 @@ exports('RemoveMoney', function (id, type, amount)
                     color = "#0094ff", -- blue
                     title = '`'..GetPlayerName(id)..'` taked `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..xPlayer.PlayerData.money[type]..'` \nType: `'..type..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else   
                 local embed = {
                     description = "[QBCORE] Not Finded Player",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         else    
             local fetch = [[SELECT money FROM players WHERE citizenid = ?]]
@@ -885,14 +885,14 @@ exports('RemoveMoney', function (id, type, amount)
                         color = "#0094ff", -- blue
                         title = '`'..id..'` taked `'..tonumber(amount)..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..accounts[type]..'` \nType: `'..type..'`',
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else    
                     local embed = {
                         description = "[DATABASE] Not finded accounts",
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local embed = {
@@ -900,7 +900,7 @@ exports('RemoveMoney', function (id, type, amount)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end 
     else
@@ -914,14 +914,14 @@ exports('RemoveMoney', function (id, type, amount)
                         color = "#0094ff", -- blue
                         title = '`'..GetPlayerName(id)..'` taked `'..amount..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..xPlayer.getAccount(type).money..'` \nType: `'..type..'`',
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else   
                    local embed = {
                        description = "[ESX] Not Finded Player",
                        color = "#ff0000",
                        author = 'WARNING'
                    }
-                   TriggerEvent('mx-serverman:SendEmbed', embed)
+                   TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             end)
         else    
@@ -936,7 +936,7 @@ exports('RemoveMoney', function (id, type, amount)
                                 color = "#0094ff", -- blue
                                 title = '`'..id..'` taked `'..amount..'` \nOld Balance: `'..result[i].money..'` \nNew Balance: `'..(math.floor(result[i].money - amount))..'` \nType: `'..type..'`',
                             }
-                            TriggerEvent('mx-serverman:SendEmbed', embed)
+                            TriggerEvent('mx-bot:SendEmbed', embed)
                             Execute('UPDATE user_accounts SET money = @money WHERE identifier = @id AND name = @name', {
                                 ['@money'] = result[i].money - math.floor(tonumber(amount)),
                                 ['@id'] = id,
@@ -951,7 +951,7 @@ exports('RemoveMoney', function (id, type, amount)
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local fetch = [[SELECT accounts FROM users WHERE identifier = @id]]
@@ -967,14 +967,14 @@ exports('RemoveMoney', function (id, type, amount)
                             color = "#0094ff", -- blue
                             title = '`'..id..'` taked `'..tonumber(amount)..'` \nOld Balance: `'..oldMoney..'` \nNew Balance: `'..accounts[type]..'` \nType: `'..type..'`',
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     else    
                         local embed = {
                             description = "[DATABASE] Not finded accounts",
                             color = "#ff0000",
                             author = 'WARNING'
                         }
-                        TriggerEvent('mx-serverman:SendEmbed', embed)
+                        TriggerEvent('mx-bot:SendEmbed', embed)
                     end
                 else
                     local embed = {
@@ -982,7 +982,7 @@ exports('RemoveMoney', function (id, type, amount)
                         color = "#ff0000",
                         author = 'WARNING'
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             end
         end 
@@ -999,14 +999,14 @@ exports('GiveItem', function (id, name, count)
                 color = "#0094ff", -- blue
                 title = '`'..GetPlayerName(id)..'` gived item. \nItem name:`'..name..'` \nCount: `'..count..'`',
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local embed = {
                 description = "Not finded player",
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         if GetPlayerName(id) then
@@ -1016,7 +1016,7 @@ exports('GiveItem', function (id, name, count)
                     color = "#0094ff", -- blue
                     title = '`'..GetPlayerName(id)..'` gived item. \nItem name:`'..name..'` \nCount: `'..count..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end)
         else
             local fetch = [[SELECT inventory FROM users WHERE identifier = @id]]
@@ -1034,7 +1034,7 @@ exports('GiveItem', function (id, name, count)
                         color = "#0094ff", -- blue
                         title = '`'..id..'` gived item. \nItem name:`'..name..'` \nCount: `'..count..'`',
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 else
                     Execute('UPDATE users SET inventory = @inv WHERE identifier = @id',  {
                         ['@id'] = id,
@@ -1044,7 +1044,7 @@ exports('GiveItem', function (id, name, count)
                         color = "#0094ff", -- blue
                         title = '`'..id..'` gived item. \nItem name:`'..name..'` \nCount: `'..count..'`',
                     }
-                    TriggerEvent('mx-serverman:SendEmbed', embed)
+                    TriggerEvent('mx-bot:SendEmbed', embed)
                 end
             else
                 local embed = {
@@ -1052,7 +1052,7 @@ exports('GiveItem', function (id, name, count)
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end
     end
@@ -1080,7 +1080,7 @@ exports('GetPlayers', function ()
                 embed.fields[3].value = embed.fields[3].value..xPlayer.PlayerData.citizenid
             end
         end
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     else
         TriggerEvent('esx:getSharedObject', function(ESX)
             local players = ESX.GetPlayers()
@@ -1099,7 +1099,7 @@ exports('GetPlayers', function ()
                     embed.fields[3].value = embed.fields[3].value..xPlayer.identifier
                 end
             end
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end)
     end
     
@@ -1116,14 +1116,14 @@ exports('Revive', function (id)
             color = "#0094ff", -- blue
             title = '`'..GetPlayerName(id)..'` Revived.',
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     else    
         local embed = {
             description = "Player is not ingame",
             color = "#ff0000",
             author = 'WARNING'
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     end
 end)
 exports('start', function(name)
@@ -1142,13 +1142,13 @@ exports('start', function(name)
             title = name..' Started.',
         }
         ExecuteCommand('ensure '..name)
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     else
         local embed = {
             color = "#0094ff", -- blue
             title = 'Script not found!',
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     end
 end)
 exports('stop', function(name)
@@ -1168,20 +1168,20 @@ exports('stop', function(name)
                 title = name..' Stopped.',
             }
             ExecuteCommand('stop '..name)
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else
             local embed = {
                 color = "#0094ff", -- blue
                 title = 'The script is already closed!',
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         local embed = {
             color = "#0094ff", -- blue
             title = 'Script not found!',
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     end
 end)
 exports('refresh', function ()
@@ -1190,7 +1190,7 @@ exports('refresh', function ()
         title = 'Scripts have been refreshed.',
     }
     ExecuteCommand('refresh')
-    TriggerEvent('mx-serverman:SendEmbed', embed)
+    TriggerEvent('mx-bot:SendEmbed', embed)
 end)
 exports('ReviveAll', function ()
     if Config.useQB then
@@ -1204,13 +1204,13 @@ exports('ReviveAll', function ()
                 color = "#0094ff", -- blue
                 title = 'All Players Revived. Total:`'..#players..'`',
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else    
             local embed = {
                 color = "#0094ff", -- blue
                 title = 'Not player found.',
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         TriggerEvent('esx:getSharedObject', function(ESX)
@@ -1223,13 +1223,13 @@ exports('ReviveAll', function ()
                     color = "#0094ff", -- blue
                     title = 'All Players Revived. Total:`'..#players..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else    
                 local embed = {
                     color = "#0094ff", -- blue
                     title = 'Not player found.',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end)
     end
@@ -1246,14 +1246,14 @@ exports('spawnCar', function (id, name)
             color = "#0094ff", -- blue
             title = ' `'..name..'` given to `'..GetPlayerName(id)..'`',
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     else    
         local embed = {
             description = "Player is not ingame",
             color = "#ff0000",
             author = 'WARNING'
         }
-        TriggerEvent('mx-serverman:SendEmbed', embed)
+        TriggerEvent('mx-bot:SendEmbed', embed)
     end
 end)
 exports('spawnAllPlayersCar', function (name)
@@ -1268,14 +1268,14 @@ exports('spawnAllPlayersCar', function (name)
                 color = "#0094ff", -- blue
                 title = ' Total Gived Vehicle: `'..#players..'`',
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else    
             local embed = {
                 description = "Player No player found on the server.",
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end
     else
         TriggerEvent('esx:getSharedObject', function(ESX)
@@ -1288,14 +1288,14 @@ exports('spawnAllPlayersCar', function (name)
                     color = "#0094ff", -- blue
                     title = ' Total Gived Vehicle: `'..#players..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else    
                 local embed = {
                     description = "Player No player found on the server.",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end
         end)
     end
@@ -1336,14 +1336,14 @@ exports('giveWeapon', function (id, name, ammo)
                 color = "#0094ff", -- blue
                 title = ' `'..name..'` given to `'..GetPlayerName(id)..'`',
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         else    
             local embed = {
                 description = "Player is not ingame",
                 color = "#ff0000",
                 author = 'WARNING'
             }
-            TriggerEvent('mx-serverman:SendEmbed', embed)
+            TriggerEvent('mx-bot:SendEmbed', embed)
         end  
     else
         TriggerEvent('esx:getSharedObject', function(ESX)
@@ -1354,14 +1354,14 @@ exports('giveWeapon', function (id, name, ammo)
                     color = "#0094ff", -- blue
                     title = ' `'..name..'` given to `'..GetPlayerName(id)..'`',
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             else    
                 local embed = {
                     description = "Player is not ingame",
                     color = "#ff0000",
                     author = 'WARNING'
                 }
-                TriggerEvent('mx-serverman:SendEmbed', embed)
+                TriggerEvent('mx-bot:SendEmbed', embed)
             end  
         end)
     end

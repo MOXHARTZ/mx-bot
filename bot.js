@@ -6,14 +6,14 @@ let changedMember = [];
 
 client.on('ready', () => {
      console.log('^1 [MOXHA] ^2Bot Is Ready^0')
-     exports['mx-servermanbot'].GetConfig(config);
+     exports['mx-bot'].GetConfig(config);
      if (config.discord_whitelist.active) {
           on('playerConnecting', (name, setCallback, deferrals) => {
                memberList = client.guilds.members
                const guild = client.guilds.get(config.discord_whitelist.server_id);
                const src = global.source;
                deferrals.defer();
-               const player = exports['mx-servermanbot'].GetDiscordFromId(src)
+               const player = exports['mx-bot'].GetDiscordFromId(src)
                deferrals.update('Checking Discord Whitelist Please Wait...')
                setTimeout(() => {
                     const discordId = player[0]
@@ -47,7 +47,7 @@ client.on('message', msg => {
           if (msg.member.roles.find((search) => search.id == config.admin_roleid)) {
                if (args[0] == config.prefix + 'ban') {
                     if (args[1] && args[2] && args[3]) {
-                         emit('mx-serverman:Ban', msg.member.user, args[1], args, (Number(args[2]) && args[2] || 0))
+                         emit('mx-bot:Ban', msg.member.user, args[1], args, (Number(args[2]) && args[2] || 0))
                          return false;
                     } else {
                          embed
@@ -62,7 +62,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'kick') {
                     if (args[1] && args[2]) {
-                         emit('mx-serverman:Kick', msg.member.user, args[1], args)
+                         emit('mx-bot:Kick', msg.member.user, args[1], args)
                          return false;
                     } else {
                          embed
@@ -74,7 +74,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'inventory') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].GetInventory(args[1]);
+                         return exports['mx-bot'].GetInventory(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -85,7 +85,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'start') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].start(args[1]);
+                         return exports['mx-bot'].start(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -96,7 +96,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'stop') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].stop(args[1]);
+                         return exports['mx-bot'].stop(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -106,10 +106,10 @@ client.on('message', msg => {
                          return false;
                     }
                } else if (args[0] == config.prefix + 'refresh') {
-                    return exports['mx-servermanbot'].refresh(args[1]);
+                    return exports['mx-bot'].refresh(args[1]);
                } else if (args[0] == config.prefix + 'setcoords') {
                     if (args[1] && args[2] && args[3] && args[4] && Number(args[2]) && Number(args[3]) && Number(args[4])) {
-                         return exports['mx-servermanbot'].SetCoords(args[1], args[2], args[3], args[4]);
+                         return exports['mx-bot'].SetCoords(args[1], args[2], args[3], args[4]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -120,7 +120,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'accounts') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].GetMoney(args[1]);
+                         return exports['mx-bot'].GetMoney(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -132,7 +132,7 @@ client.on('message', msg => {
                } else if (args[0] == config.prefix + 'addmoney') {
                     if (args[1] && args[2] && args[3]) {
                          if (args[2] == 'money' || args[2] == 'bank' || (args[2] == 'black_money' || args[2] == 'crypto')) {
-                              return exports['mx-servermanbot'].AddMoney(args[1], args[2], (Number(args[3]) && args[3] || 0));
+                              return exports['mx-bot'].AddMoney(args[1], args[2], (Number(args[3]) && args[3] || 0));
                          } else {
                               embed
                                    .setColor('#ff0000')
@@ -158,7 +158,7 @@ client.on('message', msg => {
                } else if (args[0] == config.prefix + 'giveitem') {
                     if (args[1] && args[2] && args[3]) {
                          if (Number(args[3]) != null) {
-                              return exports['mx-servermanbot'].GiveItem(args[1], args[2], Number(args[3]));
+                              return exports['mx-bot'].GiveItem(args[1], args[2], Number(args[3]));
                          } else {
                               embed
                                    .setColor('#ff0000')
@@ -178,7 +178,7 @@ client.on('message', msg => {
                } else if (args[0] == config.prefix + 'setjob') {
                     if (args[1] && args[2] && args[3]) {
                          if (Number(args[3]) != null) {
-                              return exports['mx-servermanbot'].SetJob(args[1], args[2], Number(args[3]));
+                              return exports['mx-bot'].SetJob(args[1], args[2], Number(args[3]));
                          } else {
                               embed
                                    .setColor('#ff0000')
@@ -198,7 +198,7 @@ client.on('message', msg => {
                } else if (args[0] == config.prefix + 'removemoney') {
                     if (args[1] && args[2] && args[3]) {
                          if (args[2] == 'money' || args[2] == 'bank' || args[2] == 'black_money') {
-                              return exports['mx-servermanbot'].RemoveMoney(args[1], args[2], (Number(args[3]) && args[3] || 0));
+                              return exports['mx-bot'].RemoveMoney(args[1], args[2], (Number(args[3]) && args[3] || 0));
                          } else {
                               embed
                                    .setColor('#ff0000')
@@ -223,7 +223,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'checkban') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].GetBannedPlayer(args[1])
+                         return exports['mx-bot'].GetBannedPlayer(args[1])
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -234,7 +234,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'playerinfo') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].GetGeneralInformations(args[1]);
+                         return exports['mx-bot'].GetGeneralInformations(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -245,7 +245,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'wipe') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].Wipe(args[1]);
+                         return exports['mx-bot'].Wipe(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -256,7 +256,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'unban') {
                     if (args[1]) {
-                         emit('mx-serverman:Unban', args[1])
+                         emit('mx-bot:Unban', args[1])
                          return false;
                     } else {
                          embed
@@ -267,7 +267,7 @@ client.on('message', msg => {
                          return false;
                     }
                } else if (args[0] == config.prefix + 'reviveall') {
-                    return exports['mx-servermanbot'].ReviveAll();
+                    return exports['mx-bot'].ReviveAll();
                } else if (args[0] == config.prefix + 'givewl') {
                     const member = msg.mentions.members.first();
                     if (!member) {
@@ -296,7 +296,7 @@ client.on('message', msg => {
                          return;
                } else if (args[0] == config.prefix + 'revive') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].Revive(args[1]);
+                         return exports['mx-bot'].Revive(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -335,12 +335,12 @@ client.on('message', msg => {
                     msg.channel.send(embed);
                     return false;
                } else if (args[0] == config.prefix + 'bannedplayers') {
-                    return exports['mx-servermanbot'].GetBannedPlayers();
+                    return exports['mx-bot'].GetBannedPlayers();
                } else if (args[0] == config.prefix + 'players') {
-                    return exports['mx-servermanbot'].GetPlayers();
+                    return exports['mx-bot'].GetPlayers();
                } else if (args[0] == config.prefix + 'car') {
                     if (args[1] && args[2]) {
-                         return exports['mx-servermanbot'].spawnCar(args[1], args[2]);
+                         return exports['mx-bot'].spawnCar(args[1], args[2]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -351,7 +351,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'carAll') {
                     if (args[1]) {
-                         return exports['mx-servermanbot'].spawnAllPlayersCar(args[1]);
+                         return exports['mx-bot'].spawnAllPlayersCar(args[1]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -362,7 +362,7 @@ client.on('message', msg => {
                     }
                } else if (args[0] == config.prefix + 'giveweapon') {
                     if (args[1] && args[2] && args[3]) {
-                         return exports['mx-servermanbot'].giveWeapon(args[1], args[2], args[3]);
+                         return exports['mx-bot'].giveWeapon(args[1], args[2], args[3]);
                     } else {
                          embed
                               .setColor('#ff0000')
@@ -383,8 +383,8 @@ client.on('message', msg => {
      }
 })
 
-RegisterNetEvent('mx-serverman:SendEmbed')
-on('mx-serverman:SendEmbed', embed => CurrentChannel?.send(SendEmbed(embed)));
+RegisterNetEvent('mx-bot:SendEmbed')
+on('mx-bot:SendEmbed', embed => CurrentChannel?.send(SendEmbed(embed)));
 
 SendEmbed = (embed) => {
      const CreateEmbed = new Discord.MessageEmbed().setFooter('Made By MOXHA')
