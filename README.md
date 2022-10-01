@@ -31,6 +31,9 @@
 - mx-bansystem (https://github.com/MOXHAFOREVA/mx-bansystem)
 
 ### How To Install
+- You must give the bot these permissions
+![image](https://cdn.discordapp.com/attachments/786930912012926996/1025706049052889108/Immagine_2022-10-01_113346.png)
+
 - For start, refresh, stop commands add ur server.cfg >
 ```
 # Server Management Bot
@@ -40,6 +43,9 @@ add_ace resource.mx-bot command.stop allow
 add_ace resource.mx-bot command.refresh allow
 ```
 
+
+### KNOWN ISSUES
+- **It doesn't work properly on some servers because the discord.js version is outdated.**
 ## Config.json
 - Discord Application: https://discord.com/developers/applications/
 - Discord Bot Invite: 
@@ -69,4 +75,4 @@ add_ace resource.mx-bot command.refresh allow
 
 And invite your bot !
 
-# How To Install [Video]: https://www.youtube.com/watch?v=zuse0Etmoqc
+# How To Install [OLD] [Video]: https://www.youtube.com/watch?v=zuse0Etmoqc
