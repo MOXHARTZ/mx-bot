@@ -1,4 +1,8 @@
-# Fivem Server Management Bot 
+<div align="center">
+    <h1 style="font-weight: 700; border-bottom: 0px;">
+        <a href="https://github.com/MOXHARTZ/mx-discordtool">DEPRECATED. Use mx-discordtool</a>
+    </h1>
+</div>
 
 # Features
 - Discord Whitelist
